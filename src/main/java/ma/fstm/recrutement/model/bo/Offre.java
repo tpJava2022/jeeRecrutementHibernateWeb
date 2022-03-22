@@ -25,6 +25,9 @@ public class Offre {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "typeContrat", nullable = false)
 	private TypeContrat typeContrat;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "recruteur",nullable = false)
+	private Recruteur recruteur;
 	public Offre() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -45,6 +48,14 @@ public class Offre {
 		this.date = date;
 		Profil = profil;
 		this.typeContrat = typeContrat;
+	}
+	
+	
+	public Recruteur getRecruteur() {
+		return recruteur;
+	}
+	public void setRecruteur(Recruteur recruteur) {
+		this.recruteur = recruteur;
 	}
 	public Long getId() {
 		return id;

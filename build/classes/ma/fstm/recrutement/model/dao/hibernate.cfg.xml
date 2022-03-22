@@ -15,5 +15,6 @@
   <property name="hibernate.format_sql">true</property>
   <mapping class="ma.fstm.recrutement.model.bo.Offre"/>
   <mapping class="ma.fstm.recrutement.model.bo.TypeContrat"/>
+  <mapping class="ma.fstm.recrutement.model.bo.Recruteur"/>
  </session-factory>
 </hibernate-configuration>
