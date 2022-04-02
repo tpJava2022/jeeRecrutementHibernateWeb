@@ -1,15 +1,10 @@
 package ma.fstm.recrutement.model.bo;
 
 import java.util.Date;
+import java.util.Set;
+import java.util.TreeSet;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "offre")
@@ -28,6 +23,13 @@ public class Offre {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "recruteur",nullable = false)
 	private Recruteur recruteur;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "postulation",joinColumns = {
+			@JoinColumn(name="offre")
+	},inverseJoinColumns = {
+			@JoinColumn(name="candidat")
+	})
+	private Set<Candidat> candidats=new TreeSet<Candidat>();
 	public Offre() {
 		super();
 		// TODO Auto-generated constructor stub

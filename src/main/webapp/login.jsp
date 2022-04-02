@@ -8,6 +8,10 @@
 <title>identification</title>
 </head>
 <body>
+<%@include file="header2.jsp" %>
+<div class="d-flex justify-content-center">
+		<h1>Espace Recruteur</h1>
+</div>
 <div class="d-flex justify-content-center">
 <div class="card mt-5 w-25">
 	<div class="card-header">s'identifier</div>
