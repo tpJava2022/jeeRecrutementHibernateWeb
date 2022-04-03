@@ -3,6 +3,7 @@ package ma.fstm.recrutement.model.dao;
 import java.io.*;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 
@@ -23,11 +24,22 @@ public class Test {
 		 
 		//Recruteur r=new DaoRecruteurImpl().retreive("BE902914");
 		//System.out.println(r.getNom());
-		Candidat candidat=new DaoCandidatImpl().retrieve("BE90291");
+		/*Candidat candidat=new DaoCandidatImpl().retrieve("BE90291");
 		if(candidat!=null)
 		System.out.println(candidat.getPrenom());
 		else
-			System.out.println("null");
-		
+			System.out.println("null");*/
+		DaoOffreImpl daoOffre=new DaoOffreImpl();
+		DaoCandidatImpl daoCandidat=new DaoCandidatImpl();
+		Offre offre=daoOffre.findById(Long.valueOf(2));
+		Candidat candidat=daoCandidat.retrieve("BE902914");
+		Set<Offre> offres=candidat.getOffres();
+		offres.add(offre);
+		candidat.setOffres(offres);
+		Set<Candidat> candidats=offre.getCandidats();
+		candidats.add(candidat);
+		offre.setCandidats(candidats);
+		daoCandidat.update(candidat);
+		daoOffre.update(offre);
 	}
 }

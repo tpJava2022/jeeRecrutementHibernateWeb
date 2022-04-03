@@ -102,6 +102,16 @@ public class MyServlet extends HttpServlet {
 			request.getRequestDispatcher("index.jsp").forward(request, response);
 		}else if(path.equals("/inscription.php")) {
 			request.getRequestDispatcher("inscription.jsp").forward(request, response);
+		}else if(path.equals("/offresCandidat.php")) {
+			Candidat candidat=(Candidat) session.getAttribute("candidat");
+			Collection<Offre> offres=dao.getAll();
+			for(Offre o:offres) {
+				System.out.println(o.getTitle());
+			}
+			request.setAttribute("offres", offres);
+			request.getRequestDispatcher("offresCandidat.jsp").forward(request, response);
+		}else if(path.equals("/postuler")) {
+			
 		}
 	}
 
@@ -167,15 +177,16 @@ public class MyServlet extends HttpServlet {
 			if(candidat==null)
 				response.sendRedirect("inscription.php");
 			else {
-				response.sendRedirect("index.php");
+				session.setAttribute("candidat", candidat);
+				response.sendRedirect("offresCandidat.php");
 			}
 		}else if(path.equals("/inscrire.php") && request.getMethod().equalsIgnoreCase("post")) {
-			inscrireCandidat(request, response);
-			response.sendRedirect("index.php");
+			inscrireCandidat(request, response,session);
+			response.sendRedirect("offresCandidat.php");
 		}
 	}
 	
-	private void inscrireCandidat(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
+	private void inscrireCandidat(HttpServletRequest request,HttpServletResponse response,HttpSession session) throws IOException, ServletException {
 			String nom=request.getParameter("nom");
 			String prenom=request.getParameter("prenom");
 			String cin=request.getParameter("cin");
@@ -188,7 +199,9 @@ public class MyServlet extends HttpServlet {
 			candidat.setPrenom(prenom);
 			candidat.setMail(email);
 			candidat.setCv(IOUtils.toByteArray(is));
-			daoCandidat.add(candidat);
+			candidat=daoCandidat.add(candidat);
+			session.setAttribute("candidat", candidat);
+			
 	}
 
 }

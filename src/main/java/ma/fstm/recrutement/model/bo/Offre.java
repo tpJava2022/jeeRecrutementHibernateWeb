@@ -23,7 +23,7 @@ public class Offre {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "recruteur",nullable = false)
 	private Recruteur recruteur;
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "postulation",joinColumns = {
 			@JoinColumn(name="offre")
 	},inverseJoinColumns = {
@@ -95,6 +95,12 @@ public class Offre {
 	public void setTypeContrat(TypeContrat typeContrat) {
 		this.typeContrat = typeContrat;
 	}
+	public Set<Candidat> getCandidats() {
+		return candidats;
+	}
+	public void setCandidats(Set<Candidat> candidats) {
+		this.candidats = candidats;
+	}
 
-
+	
 }

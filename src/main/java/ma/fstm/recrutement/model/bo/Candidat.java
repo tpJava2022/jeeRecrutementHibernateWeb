@@ -19,7 +19,7 @@ public class Candidat {
 	@Column(length = 100)
 	private String mail;
 	private byte[] cv;
-	@ManyToMany(fetch = FetchType.LAZY,mappedBy = "candidats")
+	@ManyToMany(fetch = FetchType.EAGER,mappedBy = "candidats")
 	private Set<Offre> offres=new TreeSet<Offre>();
 	public Long getId() {
 		return id;

@@ -1,12 +1,15 @@
 package ma.fstm.recrutement.model.dao;
 
 import java.util.Collection;
+import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import ma.fstm.recrutement.model.bo.Offre;
+import ma.fstm.recrutement.model.bo.Recruteur;
 
 public class DaoOffreImpl implements IDaoOffre {
 
@@ -71,6 +74,7 @@ public class DaoOffreImpl implements IDaoOffre {
 			session.update(o);
 			session.flush();
 			tx.commit();
+			session.close();
 			return true;
 			
 		} catch (Exception e) {
@@ -92,7 +96,25 @@ public class DaoOffreImpl implements IDaoOffre {
 	public Offre findById(Long id) {
 		SessionFactory sessionFactory=ConnectionHibernate.getSession();
 		Session session=sessionFactory.openSession();
-		return session.load(Offre.class,id);
+		Transaction tx=null;
+		try {
+			tx=session.beginTransaction();
+			//Offre offre= session.load(Offre.class,id);
+			List<Offre> offres=session.createQuery("from Offre o where o.id=:id").setParameter("id", id).list();
+			session.flush();
+			tx.commit();
+			session.close();
+			if(offres.isEmpty())
+				return null;
+			return offres.get(0);
+		}catch(HibernateException ex) {
+			ex.printStackTrace();
+			if(tx!=null) {
+				tx.rollback();
+			}
+			return null;
+		}
+		
 			//session.flush();
 			//return o;
 			
