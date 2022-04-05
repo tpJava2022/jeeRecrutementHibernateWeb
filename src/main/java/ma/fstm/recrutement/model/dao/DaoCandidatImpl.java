@@ -86,6 +86,30 @@ public class DaoCandidatImpl implements IDaoCandidat {
 			return null;
 		}
 		
+		
+	}
+
+	@Override
+	public Candidat retrieve(Long id) {
+		SessionFactory sessionFactory=ConnectionHibernate.getSession();
+		Session session;
+		if(sessionFactory.isOpen())
+			session=sessionFactory.getCurrentSession();
+		else
+			session=sessionFactory.openSession();
+		
+		Transaction tx=session.beginTransaction();
+		try {
+			List<Candidat> candidat=session.createQuery("from Candidat candidat where candidat.id=:id").setParameter("id", id).list();
+			tx.commit();
+			if(candidat.isEmpty())
+				return null;
+			return candidat.get(0);			
+		}catch(HibernateException e) {
+			//e.printStackTrace();
+			tx.rollback();
+			return null;
+		}
 	}
 
 }

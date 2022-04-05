@@ -6,5 +6,6 @@ public interface IDaoCandidat {
 	Candidat add(Candidat candidat);
 	Candidat update(Candidat candidat);
 	Candidat retrieve(String CIN);
+	Candidat retrieve(Long id);
 	
 }

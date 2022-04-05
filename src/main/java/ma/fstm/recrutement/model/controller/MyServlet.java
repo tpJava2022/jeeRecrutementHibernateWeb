@@ -22,8 +22,12 @@ import ma.fstm.recrutement.model.dao.IDaoOffre;
 import ma.fstm.recrutement.model.dao.IDaoRecruteur;
 import ma.fstm.recrutement.model.dao.IDaoTypeContrat;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,6 +37,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+import org.apache.catalina.core.ApplicationContext;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -175,6 +180,24 @@ public class MyServlet extends HttpServlet {
 			Collection<Offre> offres=dao.getAll();
 			request.setAttribute("offres", offres);
 			request.getRequestDispatcher("offresPostules.jsp").forward(request, response);
+			
+		}else if(path.equals("/telechargerCV.php")) {
+			Long id=Long.parseLong(request.getParameter("id"));
+			Candidat c=daoCandidat.retrieve(id);
+			byte[]content=c.getCv();
+			/*
+			 * OutputStream out = new FileOutputStream(c.getCIN()+".pdf");
+			 * out.write(c.getCv()); out.close();
+			 */
+			response.setContentType("application/force-download");
+			   response.setContentLength(content.length);
+			   //response.setHeader("Content-Transfer-Encoding", "binary");
+			   //String filename = URLEncoder.encode(pieceJointe.getLbnompcj(), "UTF-8");
+			   response.setHeader("Content-Disposition", "attachment; filename=\"" + c.getCIN()+".pdf" + "\"");
+
+			   response.getOutputStream().write(content);
+			   response.getOutputStream().close();
+			response.sendRedirect("offresPostules.php");
 		}
 	}
 

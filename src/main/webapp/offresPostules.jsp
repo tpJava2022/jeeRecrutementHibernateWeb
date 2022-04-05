@@ -7,7 +7,7 @@
 <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
 </head>
 <body>
-	<%@include file="header3.jsp" %>
+	<%@include file="header.jsp" %>
 	<h1 class="text-white bg-primary mt-3">Liste des offres</h1>
 	<table class="table table-striped">
 		<tr>
@@ -30,6 +30,7 @@
 				<td>${offre.profil}</td>
 				<td>${offre.date}</td>
 				<td>${offre.typeContrat.libelle}</td>
+				<td><a class="btn btn-primary" href="telechargerCV.php?id=${candidat.id}">telecharger cv</a></td>
 				<td><a class="btn btn-danger" href="annuler.php?id=${offre.id}">refuser</a></td>
 			</tr>
 			</c:forEach>

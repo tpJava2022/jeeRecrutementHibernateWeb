@@ -49,7 +49,7 @@ public class Test {
 		else
 			System.out.println("null");*/
 		
-		DaoCandidatImpl dao=new DaoCandidatImpl();
+		/*DaoCandidatImpl dao=new DaoCandidatImpl();
 		DaoOffreImpl daoOffre=new DaoOffreImpl();
 		Collection<Offre> offres2=daoOffre.getAll();
 		Candidat candidat=dao.retrieve("BE902914");
@@ -66,6 +66,20 @@ public class Test {
 		System.out.println("-----------------");
 		for(Offre o:offres3) {
 			System.out.println(o.getTitle());
+		}*/
+		
+		Candidat c=new DaoCandidatImpl().retrieve(Long.valueOf(1));
+		System.out.println(c.getCIN());
+		//Candidat c=daoCandidat.retrieve(id);
+		OutputStream out;
+		try {
+			out = new FileOutputStream(c.getCIN()+".pdf");
+			out.write(c.getCv());
+			out.close();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 	}
