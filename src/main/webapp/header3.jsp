@@ -2,16 +2,16 @@
   <div class="container-fluid">
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link active" aria-current="page" href="offres.php">Home</a>
-        <a class="nav-link active" href="ajouter.php">ajouter</a>
-        <a class="nav-link active" href="offresPostules.php">offres postules</a>
+        <a class="nav-link active" aria-current="page" href="index.php">Home</a>
+        <a class="nav-link active" href="index.php">offres</a>
+        <a class="nav-link active" href="offresPostulesCandidat.php">offres postules</a>
       </div>
     </div>
   </div>
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" href="logout.php">logout</a>
+        <a class="nav-link" href="logoutCandidat.php">logout</a>
       </li>
     </ul>
   </div>

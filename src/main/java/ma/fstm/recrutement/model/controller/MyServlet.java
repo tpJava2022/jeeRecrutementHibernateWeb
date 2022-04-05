@@ -60,6 +60,25 @@ public class MyServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+    
+    Collection<Offre> substract(Collection<Offre>offres1,Collection<Offre>offres2) {
+		Collection<Offre> offres=new ArrayList<Offre>();
+		boolean temoin;
+		for(Offre offre1 :offres1) {
+			temoin=false;
+			for(Offre offre2:offres2) {
+				if(offre1.getId()==offre2.getId())
+					temoin=true;
+					
+			}
+			if(!temoin) {
+				offres.add(offre1);
+			}
+			
+		}
+		return offres;
+	}
+    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String path=request.getServletPath();
 		HttpSession session=request.getSession(true);
@@ -99,19 +118,63 @@ public class MyServlet extends HttpServlet {
 			session.invalidate();
 			response.sendRedirect("offres.php");
 		}else if(path.equals("/index.php")) {
+			Candidat candidat=(Candidat) session.getAttribute("candidat");
+			if(candidat==null)
 			request.getRequestDispatcher("index.jsp").forward(request, response);
+			else
+				response.sendRedirect("offresCandidat.php");
 		}else if(path.equals("/inscription.php")) {
 			request.getRequestDispatcher("inscription.jsp").forward(request, response);
 		}else if(path.equals("/offresCandidat.php")) {
 			Candidat candidat=(Candidat) session.getAttribute("candidat");
-			Collection<Offre> offres=dao.getAll();
-			for(Offre o:offres) {
-				System.out.println(o.getTitle());
+			if(candidat!=null) {
+				Collection<Offre> offresCandidat=candidat.getOffres();
+				Collection<Offre> offresTotal=new ArrayList<Offre>(dao.getAll());
+				Collection<Offre> offres=substract(offresTotal, offresCandidat);
+				for(Offre o:offres) {
+					System.out.println(o.getTitle());
+				}
+				request.setAttribute("offres", offres);
+				request.getRequestDispatcher("offresCandidat.jsp").forward(request, response);
+			}else {
+				response.sendRedirect("index.php");
 			}
-			request.setAttribute("offres", offres);
-			request.getRequestDispatcher("offresCandidat.jsp").forward(request, response);
-		}else if(path.equals("/postuler")) {
+		}else if(path.equals("/postuler.php")) {
+			Long id=Long.parseLong(request.getParameter("id"));
+			Offre offre=dao.findById(id);
+			String cin=((Candidat)session.getAttribute("candidat")).getCIN();
+			Candidat candidat=daoCandidat.retrieve(cin);
+			Set<Offre> offres=candidat.getOffres();
+			offres.add(offre);
+			candidat.setOffres(offres);
+			Set<Candidat> candidats=offre.getCandidats();
+			candidats.add(candidat);
+			offre.setCandidats(candidats);
+			daoCandidat.update(candidat); 
+			dao.update(offre);
+			response.sendRedirect("offresCandidat.php");
+		}else if(path.equals("/logoutCandidat.php")) {
+			session.setAttribute("candidat",null);
+			response.sendRedirect("index.php");
+		}else if(path.equals("/offresPostulesCandidat.php")) {
+			Candidat candidat=(Candidat) session.getAttribute("candidat");
+			if(candidat!=null) {
+				Collection<Offre> offres=new ArrayList<Offre>(candidat.getOffres());
+				for(Offre o:offres) {
+					System.out.println(o.getTitle());
+				}
+				request.setAttribute("offres", offres);
+				request.getRequestDispatcher("offresPostulesCandidat.jsp").forward(request, response);
+			}else {
+				response.sendRedirect("index.php");
+			}
 			
+		}else if(path.equals("/annuler.php")) {
+			
+		}else if(path.equals("/offresPostules.php")) {
+			Collection<Offre> offres=dao.getAll();
+			request.setAttribute("offres", offres);
+			request.getRequestDispatcher("offresPostules.jsp").forward(request, response);
 		}
 	}
 
@@ -138,7 +201,7 @@ public class MyServlet extends HttpServlet {
 				offre.setRecruteur(recruteur);
 				dao.add(offre);
 				response.sendRedirect("offres.php");
-			}
+			}else
 			response.sendRedirect("login.php");
 		}else if(path.equals("/modifier.php") && request.getMethod().equalsIgnoreCase("post")) {
 			if(idRecruteur!=null) {
@@ -162,7 +225,7 @@ public class MyServlet extends HttpServlet {
 				offre.setRecruteur(recruteur);
 				dao.update(offre);
 				response.sendRedirect("offres.php");
-			}
+			}else
 			response.sendRedirect("login.php");
 		}else if(path.equals("/login.php") && request.getMethod().equalsIgnoreCase("post")) {
 			String cin=request.getParameter("cin");

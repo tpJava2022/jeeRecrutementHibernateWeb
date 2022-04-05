@@ -17,7 +17,7 @@ public class Offre {
 	private String description;
 	private Date date;
 	private String Profil;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne()
 	@JoinColumn(name = "typeContrat", nullable = false)
 	private TypeContrat typeContrat;
 	@ManyToOne(fetch = FetchType.LAZY)
